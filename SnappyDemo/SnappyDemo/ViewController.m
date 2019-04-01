@@ -25,9 +25,9 @@
     
     NSData *original = [NSData dataWithContentsOfFile:JSONPath];
     
-    NSData *compressedData = [original compressedData];
+    NSData *compressedData = [original compressedSnappyData];
     
-    NSData *decompressedData = [compressedData decompressedData];
+    NSData *decompressedData = [compressedData decompressedSnappyData];
     
     NSUInteger orignLen = [original length];
     NSUInteger compressLen = [compressedData length];
@@ -36,7 +36,7 @@
     
     NSLog(@"原数据长度:%ld,压缩后数据长度:%ld,压缩比例:%f",orignLen,compressLen,bench);
     
-    NSString *decompressedString = [compressedData decompressedString];
+    NSString *decompressedString = [compressedData decompressedSnappyString];
     
     NSLog(@"JSON String:%@",decompressedString);
     

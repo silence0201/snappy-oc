@@ -10,14 +10,14 @@
 
 @interface NSData (Snappy)
 
-- (NSData *)compressedData;
-- (NSData *)decompressedData;
-- (NSString *)decompressedString;
+- (NSData *)compressedSnappyData;
+- (NSData *)decompressedSnappyData;
+- (NSString *)decompressedSnappyString;
 
 @end
 
 @interface NSString (Snappy)
 
-- (NSData *)compressedString;
+- (NSData *)compressedSnappyString;
 
 @end

@@ -11,7 +11,7 @@
 
 @implementation NSData (Snappy)
 
-- (NSData *)compressedData {
+- (NSData *)compressedSnappyData {
     struct snappy_env env;
     NSAssert(snappy_init_env(&env) == 0, @"初始化压缩环境失败");
     size_t clen = snappy_max_compressed_length(self.length);
@@ -22,7 +22,7 @@
     return [NSData dataWithBytesNoCopy:buffer length:clen];
 }
 
-- (NSData *)decompressedData {
+- (NSData *)decompressedSnappyData {
     size_t ulen;
     snappy_uncompressed_length(self.bytes, self.length, &ulen);
     char *buffer = malloc(ulen);
@@ -30,8 +30,8 @@
     return [NSData dataWithBytesNoCopy:buffer length:ulen];
 }
 
-- (NSString *)decompressedString {
-    return [[NSString alloc] initWithData:[self decompressedData]
+- (NSString *)decompressedSnappyString {
+    return [[NSString alloc] initWithData:[self decompressedSnappyData]
                                  encoding:NSUTF8StringEncoding];
 }
 
@@ -39,8 +39,8 @@
 
 @implementation NSString (Snappy)
 
-- (NSData *)compressedString {
-    return [[self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO] compressedData];
+- (NSData *)compressedSnappyString {
+    return [[self dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO] compressedSnappyData];
 }
 
 @end
