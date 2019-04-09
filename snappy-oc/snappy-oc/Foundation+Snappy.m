@@ -7,27 +7,43 @@
 //
 
 #import "Foundation+Snappy.h"
-#import "snappy.h"
+#import "snappy-c.h"
 
 @implementation NSData (Snappy)
 
 - (NSData *)compressedSnappyData {
-    struct snappy_env env;
-    NSAssert(snappy_init_env(&env) == 0, @"初始化压缩环境失败");
-    size_t clen = snappy_max_compressed_length(self.length);
-    NSAssert(clen >= 0, @"数据长度不能为00");
-    char *buffer = malloc(clen);
-    NSAssert(snappy_compress(&env, self.bytes, self.length, buffer, &clen) == 0, @"压缩失败");
-    snappy_free_env(&env);
-    return [NSData dataWithBytesNoCopy:buffer length:clen];
+    char *buffer = (char *)[self bytes];
+    NSUInteger dataLen = [self length];
+    
+    int error = 0;
+    
+    size_t compressLen = snappy_max_compressed_length(dataLen);
+    char *compressBuffer = (char *)malloc(compressLen);
+    error = snappy_compress(buffer, dataLen, compressBuffer, &compressLen);
+    NSData *compressData;
+    if (error == 0) {
+        compressData = [[NSData alloc] initWithBytes:compressBuffer length:compressLen];
+    }
+    return compressData;
+    
+
 }
 
 - (NSData *)decompressedSnappyData {
-    size_t ulen;
-    snappy_uncompressed_length(self.bytes, self.length, &ulen);
-    char *buffer = malloc(ulen);
-    assert(snappy_uncompress(self.bytes, self.length, buffer) == 0);
-    return [NSData dataWithBytesNoCopy:buffer length:ulen];
+    size_t uncompressLen;
+    char *buffer = (char *)[self bytes];
+    NSUInteger dataLen = [self length];
+    
+    int error = 0;
+    snappy_uncompressed_length(buffer, dataLen, &uncompressLen);
+    char *uncompressData = (char *)malloc(sizeof(char) * uncompressLen);
+    error = snappy_uncompress(buffer, dataLen, uncompressData, &uncompressLen);
+    if (error != 0) {
+        free(uncompressData);
+        uncompressData = NULL;
+    }
+    
+    return [[NSData alloc] initWithBytes:uncompressData length:uncompressLen];
 }
 
 - (NSString *)decompressedSnappyString {
