@@ -1,0 +1,16 @@
+PODS:
+  - SnappyOC (1.1)
+
+DEPENDENCIES:
+  - SnappyOC (~> 1.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SnappyOC
+
+SPEC CHECKSUMS:
+  SnappyOC: 3a2d352866a7183c51f63e2721ff1d03910a9cf4
+
+PODFILE CHECKSUM: 2dd778096cab0966f9f7c06dfba88e33c36aeec2
+
+COCOAPODS: 1.6.0
